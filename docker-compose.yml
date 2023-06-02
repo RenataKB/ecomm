@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  app:
+    image: renatakb/ecomm:1.0
+
+  mongo-ecomm:
+    image: mongo
+    container_name: mongo-ecomm
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    volumes:
+      - db-mongo-ecomm:/data/db
+      - type: bind
+        source: ./mongo
+        target: /mongo-scripts
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
+
+volumes:
+  db-mongo-ecomm:
