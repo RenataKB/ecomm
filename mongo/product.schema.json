@@ -1,0 +1,44 @@
+{
+    "$jsonSchema": {
+        "bsonType": "object",
+        "additionalProperties": false,
+        "required": ["_id", "NOME", "DESCRIÇÃO", "SLUG", "PREÇO UNITÁRIO", "QUANTIDADE EM ESTOQUE", "CATEGORIA"],
+        "properties": {
+            "_id": {
+                "bsonType": "objectId"
+            },
+            "NOME": {
+                "bsonType": "string",
+                "minLength": 5,
+                "description": "NOME precisa ter no mínimo 5 caracteres."
+            },
+            "DESCRIÇÃO": {
+                "bsonType": "string",
+                "minLength": 10,
+                "description": "DESCRIÇÃO precisa ter no mínimo 5 caracteres."
+            },
+            "SLUG": {
+                "bsonType": "string",
+                "minLength": 5,
+                "description": "SLUG precisa ter no mínimo 5 caracteres."
+            },
+            "PREÇO UNITÁRIO": {
+                "bsonType": "decimal",
+                "minimum": 0,
+                "exclusiveMinimum": false,
+                "description": "PREÇO UNITÁRIO precisa ser um inteiro não negativo."
+            },
+            "QUANTIDADE EM ESTOQUE": {
+                "bsonType": "int",
+                "minimum": 0,
+                "exclusiveMinimum": false,
+                "description": "QUANTIDADE EM ESTOQUE precisa ser um inteiro não negativo."
+            },
+            "CATEGORIA": {
+                "bsonType": "string",
+                "enum": ["AUTOMOTIVA", "CELULARES", "INFORMÁTICA", "LIVROS", "MÓVEIS"],
+                "description": "CATEGORIA precisa ser AUTOMOTIVA, CELULARES, INFORMÁTICA, LIVROS ou MÓVEIS."
+            }
+        }
+    }
+}
