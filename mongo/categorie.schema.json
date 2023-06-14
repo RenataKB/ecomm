@@ -1,0 +1,22 @@
+{
+    "$jsonSchema": {
+        "bsonType": "object",
+        "additionalProperties": false,
+        "required": ["_id", "nome", "status"],
+        "properties": {
+            "_id": {
+                "bsonType": "objectId"
+            },
+            "nome": {
+                "bsonType": "string",
+                "minLength": 3,
+                "description": "Nome precisa ter no mínimo 3 caracteres."
+            },
+            "status": {
+                "bsonType": "string",
+                "enum": ["ATIVA", "INATIVA"],
+                "description": "Status precisa ser ATIVA ou INATIVA."
+            }
+        }
+    }
+}
