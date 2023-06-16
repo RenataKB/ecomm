@@ -1,0 +1,637 @@
+openapi: 3.0.3
+info:
+  title: Projeto Econn
+  description: Simulação de um ecommerce
+  license:
+    name: "Licença: GPLv3"
+    url: https://www.gnu.org/licenses/gpl-3.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: categorias
+    description: Tudo sobre as categorias disponíveis
+  - name: produtos
+    description: Tudo sobre os produtos disponíveis
+  - name: usuários
+    description: Todos os dados sobre os usuários disponíveis
+  - name: pedidos
+    description: Tudo sobre os pedidos disponíveis
+paths:
+  /api/categories:
+    get:
+      tags:
+        - categorias
+      summary: Lista todas as categorias
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Categoria'
+  /api/admin/categories:
+    post:
+      tags:
+        - categorias
+      summary: Insere nova categoria
+      requestBody:
+        description: Criar uma nova categoria
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovaCategoria'
+        required: true
+      responses:
+        '201':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '405':
+          description: Input inválido
+  /api/categories/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          example: 63caa785ae701b25441ff0be
+        required: true
+    get:
+      tags:
+        - categorias
+      summary: Retorna a categoria desejada
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '404':
+          description: Categoria não encontrada
+          content:
+            application/json:
+              example: Não encontrado
+  /api/admin/categories/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          example: 63caa785ae701b25441ff0be
+        required: true
+    put:
+      tags:
+        - categorias
+      summary: Atualiza a categoria desejada
+      requestBody:
+        description: Atualizar uma categoria
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Categoria'
+        required: true
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '404':
+          description: Categoria não encontrada
+          content:
+            application/json:
+              example: Não encontrado
+    delete:
+      tags:
+        - categorias
+      summary: Deleta a categoria desejada
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '404':
+          description: Categoria não encontrada
+          content:
+            application/json:
+              example: Não encontrado
+    patch:
+      tags:
+        - categorias
+      summary: Ativa a categoria desejada
+      requestBody:
+        description: Atualizar uma categoria
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1
+                nome:
+                  type: string
+                  example: INFORMÁTICA
+                status:
+                  type: string
+                  default: ATIVA
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '404':
+          description: Categoria não encontrada
+          content:
+            application/json:
+              example: Não encontrado
+  /api/products:
+    get:
+      tags:
+        - produtos
+      summary: Busca por produtos
+      parameters:
+        - name: CATEGORIA
+          in: query
+          description: Busca por categoria
+          required: false
+          explode: true
+          schema:
+            type: string
+            enum:
+              - INFORMÁTICA
+              - BELEZA
+              - CELULARES
+              - MÓVEIS
+              - LUXO
+              - ESPORTE
+              - AUTOMÓVEIS
+              - LIVROS
+              - VESTUÁRIO
+        - name: DISPONIBILIDADE
+          in: query
+          description: "Produtos com quantidade em estoque maior que:"
+          required: false
+          explode: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: PREÇO MÍNIMO
+          in: query
+          description: "Preço mínimo do produtos a buscar"
+          required: false
+          explode: true
+          schema:
+            type: number
+            minimum: 0
+        - name: PREÇO MÁXIMO
+          in: query
+          description: "Preço máximo do produtos a buscar"
+          required: false
+          explode: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Produto'
+        '400':
+          description: Busca inválida
+  /api/admin/products:
+    post:
+      tags:
+        - produtos
+      summary: Insere novo produto
+      requestBody:
+        description: Criar um novo produto
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+        required: true
+      responses:
+        '201':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '405':
+          description: Input inválido
+  /api/products/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          example: 63caa785ae701b25441ff0be
+        required: true
+    get:
+      tags:
+        - produtos
+      summary: Retorna o produto desejado
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '404':
+          description: Produto não encontrado
+          content:
+            application/json:
+              example: Não encontrado
+  /api/admin/products/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          example: 63caa785ae701b25441ff0be
+        required: true
+    put:
+      tags:
+        - produtos
+      summary: Atualiza o produto desejado
+      requestBody:
+        description: Atualizar um produto
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+        required: true
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '404':
+          description: Produto não encontrado
+          content:
+            application/json:
+              example: Não encontrado
+    delete:
+      tags:
+        - produtos
+      summary: Deleta o produto desejado
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '404':
+          description: Produto não encontrado
+          content:
+            application/json:
+              example: Não encontrado
+  /api/admin/users:
+    get:
+      tags:
+        - usuários
+      summary: Lista todos os usuários
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Usuario'
+    post:
+      tags:
+        - usuários
+      summary: Insere novo usuário
+      requestBody:
+        description: Criar um novo usuário
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+        required: true
+      responses:
+        '201':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '405':
+          description: Input inválido
+  /api/admin/users/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          example: 63caa785ae701b25441ff0be
+        required: true
+    get:
+      tags:
+        - usuários
+      summary: Retorna o usuário desejado
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '404':
+          description: Usuário não encontrado
+          content:
+            application/json:
+              example: Não encontrado
+    put:
+      tags:
+        - usuários
+      summary: Atualiza o usuário desejado
+      requestBody:
+        description: Atualizar um usuário
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+        required: true
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '404':
+          description: Usuário não encontrado
+          content:
+            application/json:
+              example: Não encontrado
+    delete:
+      tags:
+        - usuários
+      summary: Deleta o usuário desejado
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '404':
+          description: Usuário não encontrado
+          content:
+            application/json:
+              example: Não encontrado
+  /api/admin/orders:
+    post:
+      tags:
+        - pedidos
+      summary: Insere novo pedido
+      requestBody:
+        description: Criar um novo pedido
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pedido'
+        required: true
+      responses:
+        '201':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+        '405':
+          description: Input inválido
+  /api/admin/orders/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: string
+          example: 63caa785ae701b25441ff0be
+        required: true
+    get:
+      tags:
+        - pedidos
+      summary: Retorna o pedido desejado
+      responses:
+        '200':
+          description: Successo na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+        '404':
+          description: Pedido não encontrado
+          content:
+            application/json:
+              example: Não encontrado
+components:
+  schemas:
+    Categoria:
+      required:
+        - nome
+        - status
+      type: object
+      properties:
+        id:
+          type: string
+          example: 63caa785ae701b25441ff0be
+        nome:
+          type: string
+          example: INFORMÁTICA
+        status:
+          type: string
+          description: status da categoria
+          enum:
+            - ATIVA
+            - INATIVA
+    NovaCategoria:
+      required:
+        - nome
+      type: object
+      properties:
+        id:
+          type: string
+          example: 63caa785ae701b25441ff0be
+        nome:
+          type: string
+          example: INFORMÁTICA
+        status:
+          type: string
+          default: ATIVA
+    Produto:
+      required:
+        - NOME
+        - DESCRIÇÃO
+        - SLUG
+        - PREÇO UNITÁRIO
+        - QUANTIDADE EM ESTOQUE
+        - CATEGORIA
+      type: object
+      properties:
+        id:
+          type: string
+          example: 63caa785ae701b25441ff0be
+        NOME:
+          type: string
+          example: "iPhone 13 Pro"
+        DESCRIÇÃO:
+          type: string
+          example: "Apple iPhone 13 Pro (256 GB) - Verde-alpino"
+        SLUG:
+          type: string
+          example: "iphone-13-pro"
+        PREÇO UNITÁRIO:
+          type: number
+          example: 9176.00
+        QUANTIDADE EM ESTOQUE:
+          type: integer
+          example: 6
+        CATEGORIA:
+          type: string
+          example: "CELULARES"
+    Usuario:
+      required:
+        - nomeUsuario
+        - email
+        - senha
+        - cpf
+        - telefone
+        - endereco
+      type: object
+      properties:
+        id:
+          type: string
+          example: 63caa785ae701b25441ff0be
+        nomeUsuario:
+          type: string
+          example: "Aline Carolina Lúcia Pereira"
+        email:
+          type: string
+          format: email
+          example: "aline_carolina_pereira@hellokitty.com"
+        senha:
+          type: string
+          format: password
+          example: "NiZL3LLHmm"
+        cpf:
+          type: string
+          example: "32021260836"
+        telefone:
+          type: string
+          example: "1127197418"
+        endereco:
+          $ref: '#/components/schemas/Endereco'
+    Endereco:
+      required:
+        - rua
+        - numero
+        - cep
+        - cidade
+        - uf
+      type: object
+      properties:
+        rua:
+          type: string
+          example: "Rua Augusto Marreiros"
+        numero:
+          type: string
+          example: "187"
+        complemento:
+          type: string
+          nullable: true
+          example: "Ap 101"
+        cep:
+          type: string
+          example: "08471340"
+        cidade:
+          type: string
+          example: "São Paulo"
+        uf:
+          enum:
+          - AC
+          - AL
+          - AP
+          - AM
+          - BA
+          - CE
+          - DF
+          - ES
+          - GO
+          - MA
+          - MT
+          - MS
+          - MG
+          - PA
+          - PB
+          - PR
+          - PE
+          - PI
+          - RJ
+          - RN
+          - RS
+          - RO
+          - RR
+          - SC
+          - SP
+          - SE
+          - TO
+    Pedido:
+      required:
+        - idCliente
+        - enderecoEntrega
+        - compras
+      type: object
+      properties:
+        idCliente:
+          type: string
+          example: 63caa785ae701b25441ff0be
+        enderecoEntrega:
+          $ref: '#/components/schemas/Endereco'
+        compras:
+          type: array
+          items:
+            $ref: '#/components/schemas/Compra'
+    Compra:
+      required:
+        - idProduto
+        - quantidade
+        - precoUnitario
+      type: object
+      properties:
+        idProduto:
+          type: string
+          example: 63caa785ae701b25441ff0be
+        quantidade:
+          type: integer
+          minimum: 1
+        desconto:
+          type: number
+          nullable: true
+          example: 200.00
+        precoUnitario:
+          type: number
+          example: 9176.00
