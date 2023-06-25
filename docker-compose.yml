@@ -1,7 +1,13 @@
 version: "3.9"
 services:
   app:
-    image: renatakb/ecomm:1.0
+    image: renatakb/ecomm:1.1
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_HOST: mongo-ecomm
+    depends_on:
+      - mongo-ecomm
 
   mongo-ecomm:
     image: mongo
